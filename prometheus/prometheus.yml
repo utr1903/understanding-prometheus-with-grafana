@@ -1,0 +1,13 @@
+global:
+  scrape_interval: 10s
+
+scrape_configs:
+  # App 1
+  - job_name: "app-1"
+    static_configs:
+      - targets: ["app-1:8080"]
+
+  # App 2
+  - job_name: "app-2"
+    static_configs:
+      - targets: ["app-2:8080"]
