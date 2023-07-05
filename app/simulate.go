@@ -5,10 +5,15 @@ import (
 	"io"
 	"math/rand"
 	"net/http"
+	"os"
+	"strconv"
 	"time"
 )
 
 var (
+
+	// Request interval
+	requestInterval, _ = strconv.ParseInt(os.Getenv("REQUEST_INTERVAL"), 10, 64)
 
 	// Methods to make random requests
 	methods = []string{
@@ -64,7 +69,7 @@ func simulate() {
 		func() {
 
 			// Make request every second
-			time.Sleep(time.Second)
+			time.Sleep(time.Duration(requestInterval) * time.Second)
 
 			// Prepare HTTP request
 			req := prepareHttpRequest()

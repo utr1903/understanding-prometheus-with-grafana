@@ -11,9 +11,12 @@ volumes:
 services:
   # App 1
   app-1:
+    container_name: app1
     build:
       context: ./app
       dockerfile: Dockerfile
+    environment:
+      - REQUEST_INTERVAL=${REQUEST_INTERVAL_APP_1}
     ports:
       - "8080:8080"
     networks:
@@ -21,9 +24,12 @@ services:
 
   # App 2
   app-2:
+    container_name: app2
     build:
       context: ./app
       dockerfile: Dockerfile
+    environment:
+      - REQUEST_INTERVAL=${REQUEST_INTERVAL_APP_2}
     ports:
       - "8081:8080"
     networks:
