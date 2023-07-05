@@ -2,7 +2,6 @@ package main
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
@@ -11,6 +10,7 @@ import (
 const (
 	LABEL_METHOD      = "method"
 	LABEL_STATUS_CODE = "status_code"
+	LABEL_USER        = "user"
 )
 
 var (
@@ -22,6 +22,7 @@ var (
 		[]string{
 			LABEL_METHOD,
 			LABEL_STATUS_CODE,
+			LABEL_USER,
 		},
 	)
 )
@@ -32,26 +33,31 @@ func httpHandler(
 	r *http.Request,
 ) {
 
-	statusCode := http.StatusOK
-	statusCodeParam := r.URL.Query().Get("status_code")
+	statusCodeParam := r.URL.Query().Get(LABEL_STATUS_CODE)
+	user := r.URL.Query().Get(LABEL_USER)
 
-	switch statusCodeParam {
-	case "200":
-		statusCode = http.StatusOK
-	case "400":
-		statusCode = http.StatusBadRequest
-	case "404":
-		statusCode = http.StatusNotFound
-	default:
-		statusCode = http.StatusInternalServerError
-	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Success"))
+	w.WriteHeader(getCorrespondingStatusCode(statusCodeParam))
+	w.Write([]byte("Request is handled."))
 
 	counter.With(
 		prometheus.Labels{
 			LABEL_METHOD:      r.Method,
-			LABEL_STATUS_CODE: strconv.Itoa(statusCode),
+			LABEL_STATUS_CODE: statusCodeParam,
+			LABEL_USER:        user,
 		}).Inc()
+}
+
+func getCorrespondingStatusCode(
+	statusCodeParam string,
+) int {
+	switch statusCodeParam {
+	case "200":
+		return http.StatusOK
+	case "400":
+		return http.StatusBadRequest
+	case "404":
+		return http.StatusNotFound
+	default:
+		return http.StatusInternalServerError
+	}
 }
