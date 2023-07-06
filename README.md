@@ -244,6 +244,18 @@ grafana:
     - monitoring
 ```
 
+To run the setup, execute the following:
+
+```bash
+docker compose up --build
+```
+
+and to stop & clean:
+
+```bash
+docker compose down
+```
+
 ### Prometheus
 
 Prometheus needs a configuration file to figure out _where to scrape_. This file is the [prometheus.yml](/prometheus/prometheus.yml):
