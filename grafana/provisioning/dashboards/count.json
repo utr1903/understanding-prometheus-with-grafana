@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 2,
+  "id": 1,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -67,7 +67,7 @@
           "showLineNumbers": false,
           "showMiniMap": false
         },
-        "content": "# RPM of all\n\nThis panel shows the average number of all requests of all types of `methods` and `status_codes` which have been made to all of the `instances` by all of the `users`.\n",
+        "content": "# RPM\n\nThis panel shows the average number of all requests of all types of `methods` and `status_codes` which have been made to all of the `instances` by all of the `users`.\n",
         "mode": "markdown"
       },
       "pluginVersion": "10.0.1",
@@ -157,7 +157,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum (rate(my_app_http_requests_count[1m]))",
+          "expr": "sum (rate(my_app_http_requests_count[1m]))*60",
           "format": "time_series",
           "instant": false,
           "legendFormat": "RPM of all requests",
@@ -165,7 +165,7 @@
           "refId": "A"
         }
       ],
-      "title": "Num requests per minute",
+      "title": "RPM",
       "type": "timeseries"
     },
     {
@@ -223,7 +223,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum (rate(my_app_http_requests_count[1m]))",
+          "expr": "sum (rate(my_app_http_requests_count[1m]))*60",
           "format": "time_series",
           "instant": false,
           "legendFormat": "",
@@ -231,7 +231,7 @@
           "refId": "A"
         }
       ],
-      "title": "Num requests per minute",
+      "title": "RPM",
       "type": "gauge"
     },
     {
@@ -246,14 +246,14 @@
         "x": 0,
         "y": 14
       },
-      "id": 7,
+      "id": 9,
       "options": {
         "code": {
           "language": "plaintext",
           "showLineNumbers": false,
           "showMiniMap": false
         },
-        "content": "# RPM by instance\n\nThis panel shows the average number of all requests of all types of `methods` and `status_codes` which have been made by all of the `users` to individual `instances`.\n",
+        "content": "# RPM per method\n\nThis panel shows the average number of all requests of all types of `status_codes` per individual `methods` which have been made to all of the `instances` by all of the `users`.\n",
         "mode": "markdown"
       },
       "pluginVersion": "10.0.1",
@@ -343,7 +343,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum by (instance) (rate(my_app_http_requests_count[1m]))",
+          "expr": "sum by (instance) (rate(my_app_http_requests_count{method=~\"$method\",status_code=~\"$status_code\",instance=~\"$instance\",user=~\"$user\"}[1m]))*60",
           "format": "time_series",
           "instant": false,
           "legendFormat": "__auto",
@@ -351,7 +351,7 @@
           "refId": "A"
         }
       ],
-      "title": "Num requests per minute per instance",
+      "title": "RPM per instance",
       "type": "timeseries"
     },
     {
@@ -387,195 +387,6 @@
         "x": 18,
         "y": 14
       },
-      "id": 14,
-      "options": {
-        "displayMode": "gradient",
-        "minVizHeight": 10,
-        "minVizWidth": 0,
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showUnfilled": true,
-        "valueMode": "color"
-      },
-      "pluginVersion": "10.0.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "sum by (instance) (rate(my_app_http_requests_count[1m]))",
-          "format": "time_series",
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Num requests per minute per instance",
-      "type": "bargauge"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "description": "",
-      "gridPos": {
-        "h": 9,
-        "w": 6,
-        "x": 0,
-        "y": 23
-      },
-      "id": 9,
-      "options": {
-        "code": {
-          "language": "plaintext",
-          "showLineNumbers": false,
-          "showMiniMap": false
-        },
-        "content": "# RPM by method\n\nThis panel shows the average number of all requests of all types of `status_codes` per individual `methods` which have been made to all of the `instances` by all of the `users`.\n",
-        "mode": "markdown"
-      },
-      "pluginVersion": "10.0.1",
-      "type": "text"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 6,
-        "y": 23
-      },
-      "id": 10,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "10.0.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "editorMode": "code",
-          "expr": "sum by (method) (rate(my_app_http_requests_count[1m]))",
-          "format": "time_series",
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Num requests per minute per method",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 6,
-        "x": 18,
-        "y": 23
-      },
       "id": 15,
       "options": {
         "displayMode": "gradient",
@@ -601,7 +412,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum by (method) (rate(my_app_http_requests_count[1m]))",
+          "expr": "sum by (method) (rate(my_app_http_requests_count{method=~\"$method\",status_code=~\"$status_code\",instance=~\"$instance\",user=~\"$user\"}[1m]))*60",
           "format": "time_series",
           "instant": false,
           "legendFormat": "__auto",
@@ -609,7 +420,196 @@
           "refId": "A"
         }
       ],
-      "title": "Num requests per minute per method",
+      "title": "RPM per method",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "description": "",
+      "gridPos": {
+        "h": 9,
+        "w": 6,
+        "x": 0,
+        "y": 23
+      },
+      "id": 20,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "# RPM per status code\n\nThis panel shows the average number of all requests of all types of `methods` per individual `status_codes` which have been made to all of the `instances` by all of the `users`.\n",
+        "mode": "markdown"
+      },
+      "pluginVersion": "10.0.1",
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 6,
+        "y": 23
+      },
+      "id": 21,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.0.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "sum by (status_code) (rate(my_app_http_requests_count{method=~\"$method\",status_code=~\"$status_code\",instance=~\"$instance\",user=~\"$user\"}[1m]))*60",
+          "format": "time_series",
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "RPM per status code",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 6,
+        "x": 18,
+        "y": 23
+      },
+      "id": 22,
+      "options": {
+        "displayMode": "gradient",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "valueMode": "color"
+      },
+      "pluginVersion": "10.0.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum by (status_code) (rate(my_app_http_requests_count{method=~\"$method\",status_code=~\"$status_code\",instance=~\"$instance\",user=~\"$user\"}[1m]))*60",
+          "format": "time_series",
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "RPM per status code",
       "type": "bargauge"
     },
     {
@@ -624,14 +624,14 @@
         "x": 0,
         "y": 32
       },
-      "id": 11,
+      "id": 7,
       "options": {
         "code": {
           "language": "plaintext",
           "showLineNumbers": false,
           "showMiniMap": false
         },
-        "content": "# RPM by user\n\nThis panel shows the average number of all requests of all types of `methods` and `status_codes` which have been made to all of the `instances` by individual `users`.\n",
+        "content": "# RPM per instance\n\nThis panel shows the average number of all requests of all types of `methods` and `status_codes` which have been made by all of the `users` to individual `instances`.\n",
         "mode": "markdown"
       },
       "pluginVersion": "10.0.1",
@@ -700,7 +700,7 @@
         "x": 6,
         "y": 32
       },
-      "id": 12,
+      "id": 10,
       "options": {
         "legend": {
           "calcs": [],
@@ -721,7 +721,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum by (user) (rate(my_app_http_requests_count[1m]))",
+          "expr": "sum by (method) (rate(my_app_http_requests_count{method=~\"$method\",status_code=~\"$status_code\",instance=~\"$instance\",user=~\"$user\"}[1m]))*60",
           "format": "time_series",
           "instant": false,
           "legendFormat": "__auto",
@@ -729,7 +729,7 @@
           "refId": "A"
         }
       ],
-      "title": "Num requests per minute per user",
+      "title": "RPM per method",
       "type": "timeseries"
     },
     {
@@ -764,6 +764,195 @@
         "w": 6,
         "x": 18,
         "y": 32
+      },
+      "id": 14,
+      "options": {
+        "displayMode": "gradient",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "valueMode": "color"
+      },
+      "pluginVersion": "10.0.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum by (instance) (rate(my_app_http_requests_count{method=~\"$method\",status_code=~\"$status_code\",instance=~\"$instance\",user=~\"$user\"}[1m]))*60",
+          "format": "time_series",
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "RPM per instance",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "description": "",
+      "gridPos": {
+        "h": 9,
+        "w": 6,
+        "x": 0,
+        "y": 41
+      },
+      "id": 11,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "# RPM per user\n\nThis panel shows the average number of all requests of all types of `methods` and `status_codes` which have been made to all of the `instances` by individual `users`.\n",
+        "mode": "markdown"
+      },
+      "pluginVersion": "10.0.1",
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 6,
+        "y": 41
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.0.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "sum by (user) (rate(my_app_http_requests_count{method=~\"$method\",status_code=~\"$status_code\",instance=~\"$instance\",user=~\"$user\"}[1m]))*60",
+          "format": "time_series",
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "RPM per user",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 6,
+        "x": 18,
+        "y": 41
       },
       "id": 16,
       "options": {
@@ -790,7 +979,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum by (user) (rate(my_app_http_requests_count[1m]))",
+          "expr": "sum by (user) (rate(my_app_http_requests_count{method=~\"$method\",status_code=~\"$status_code\",instance=~\"$instance\",user=~\"$user\"}[1m]))*60",
           "format": "time_series",
           "instant": false,
           "legendFormat": "__auto",
@@ -798,7 +987,7 @@
           "refId": "A"
         }
       ],
-      "title": "Num requests per minute per user",
+      "title": "RPM per user",
       "type": "bargauge"
     },
     {
@@ -811,7 +1000,7 @@
         "h": 9,
         "w": 6,
         "x": 0,
-        "y": 41
+        "y": 50
       },
       "id": 17,
       "options": {
@@ -820,7 +1009,7 @@
           "showLineNumbers": false,
           "showMiniMap": false
         },
-        "content": "# RPM by variables\n\nThis panel shows the average number of requests per minute according to dashboard variables:\n- `methods`\n- `status_codes`\n- `instances`\n- `users`\n",
+        "content": "# RPM per each dashboard variable\n\nThis panel shows the average number of requests per minute according to dashboard variables:\n- `methods`\n- `status_codes`\n- `instances`\n- `users`\n",
         "mode": "markdown"
       },
       "pluginVersion": "10.0.1",
@@ -887,7 +1076,7 @@
         "h": 9,
         "w": 12,
         "x": 6,
-        "y": 41
+        "y": 50
       },
       "id": 18,
       "options": {
@@ -910,7 +1099,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum by (method, status_code, instance, user) (rate(my_app_http_requests_count{method=~\"$method\",status_code=~\"$status_code\",instance=~\"$instance\",user=~\"$user\"}[1m]))",
+          "expr": "sum by (method, status_code, instance, user) (rate(my_app_http_requests_count{method=~\"$method\",status_code=~\"$status_code\",instance=~\"$instance\",user=~\"$user\"}[1m]))*60",
           "format": "time_series",
           "instant": false,
           "legendFormat": "__auto",
@@ -918,7 +1107,7 @@
           "refId": "A"
         }
       ],
-      "title": "Num requests per each dashboard variable",
+      "title": "RPM per each dashboard variable",
       "type": "timeseries"
     },
     {
@@ -952,13 +1141,13 @@
         "h": 9,
         "w": 6,
         "x": 18,
-        "y": 41
+        "y": 50
       },
       "id": 19,
       "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
+        "displayMode": "gradient",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
         "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
@@ -967,7 +1156,8 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "showUnfilled": true,
+        "valueMode": "color"
       },
       "pluginVersion": "10.0.1",
       "targets": [
@@ -978,7 +1168,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum by (method, status_code, instance, user) (rate(my_app_http_requests_count{method=~\"$method\",status_code=~\"$status_code\",instance=~\"$instance\",user=~\"$user\"}[1m]))",
+          "expr": "sum by (method, status_code, instance, user) (rate(my_app_http_requests_count{method=~\"$method\",status_code=~\"$status_code\",instance=~\"$instance\",user=~\"$user\"}[1m]))*60",
           "format": "time_series",
           "instant": false,
           "legendFormat": "__auto",
@@ -986,8 +1176,8 @@
           "refId": "A"
         }
       ],
-      "title": "Num requests per minute per dashboard variable",
-      "type": "stat"
+      "title": "RPM per each dashboard variable",
+      "type": "bargauge"
     }
   ],
   "refresh": "5s",
@@ -997,11 +1187,15 @@
   "templating": {
     "list": [
       {
-        "allValue": "All",
+        "allValue": ".*",
         "current": {
-          "selected": false,
-          "text": "DELETE",
-          "value": "DELETE"
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
         },
         "datasource": {
           "type": "prometheus",
@@ -1010,7 +1204,7 @@
         "definition": "label_values(my_app_http_requests_count{},method)",
         "description": "Name of the HTTP methods from the metric label",
         "hide": 0,
-        "includeAll": false,
+        "includeAll": true,
         "label": "method",
         "multi": true,
         "name": "method",
@@ -1026,11 +1220,15 @@
         "type": "query"
       },
       {
-        "allValue": "All",
+        "allValue": ".*",
         "current": {
-          "selected": false,
-          "text": "200",
-          "value": "200"
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
         },
         "datasource": {
           "type": "prometheus",
@@ -1039,7 +1237,7 @@
         "definition": "label_values(my_app_http_requests_count{},status_code)",
         "description": "Name of the HTTP status codes from the metric label",
         "hide": 0,
-        "includeAll": false,
+        "includeAll": true,
         "label": "status_code",
         "multi": true,
         "name": "status_code",
@@ -1055,11 +1253,15 @@
         "type": "query"
       },
       {
-        "allValue": "All",
+        "allValue": ".*",
         "current": {
-          "selected": false,
-          "text": "app-1:8080",
-          "value": "app-1:8080"
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
         },
         "datasource": {
           "type": "prometheus",
@@ -1068,7 +1270,7 @@
         "definition": "label_values(my_app_http_requests_count{},instance)",
         "description": "Name of the instances from the metric label",
         "hide": 0,
-        "includeAll": false,
+        "includeAll": true,
         "label": "instance",
         "multi": true,
         "name": "instance",
@@ -1084,14 +1286,14 @@
         "type": "query"
       },
       {
-        "allValue": "",
+        "allValue": ".*",
         "current": {
           "selected": true,
           "text": [
-            "bill"
+            "All"
           ],
           "value": [
-            "bill"
+            "$__all"
           ]
         },
         "datasource": {
@@ -1101,7 +1303,7 @@
         "definition": "label_values(my_app_http_requests_count{},user)",
         "description": "Name of the users from the metric label",
         "hide": 0,
-        "includeAll": false,
+        "includeAll": true,
         "label": "user",
         "multi": true,
         "name": "user",
@@ -1126,6 +1328,6 @@
   "timezone": "",
   "title": "Count Metric",
   "uid": "ce1bf648-9f93-40a7-bf27-8116c30c13c4",
-  "version": 14,
+  "version": 10,
   "weekStart": ""
 }
