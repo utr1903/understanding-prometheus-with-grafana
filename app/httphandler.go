@@ -43,6 +43,13 @@ var (
 		prometheus.HistogramOpts{
 			Name: "my_app_http_requests_latency_seconds",
 			Help: "Latency of HTTP requests",
+			Buckets: []float64{
+				0.00001,
+				0.00002,
+				0.00005,
+				0.00010,
+				0.00020,
+			},
 		},
 		[]string{
 			LABEL_METHOD,
@@ -66,9 +73,6 @@ func httpHandler(
 
 	// Increase in-process requests
 	updateInProcessRequests(r.Method, statusCodeParam, user, true)
-
-	// Wait 2 seconds
-	time.Sleep(2 * time.Second)
 
 	// Write response
 	w.WriteHeader(getCorrespondingStatusCode(statusCodeParam))
